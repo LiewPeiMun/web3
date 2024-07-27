@@ -1,7 +1,9 @@
 <template>
   <header>
     <div class="header-content">
-      <a href="/" class="logo">EDUCHAINAID</a>
+      <a href="/" class="logo">
+        <img :src="'src/assets/images/logo.png'" alt="EDUCHAINAID Logo"/>
+      </a>
       <div class="hamburger-menu" @click="toggleNav">
         <span></span>
         <span></span>
@@ -11,14 +13,14 @@
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/about">About</a></li>
-          <li><a href="/causes">Causes</a></li>
-          <li><a href="/events">Events</a></li>
+          <li><a href="/causes">Events</a></li>
+          <li><a href="/events">Application</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
       </nav>
       <div class="justify-right">
         <button class="donate-button" @click="showTransactionForm">Donate Now</button>
-        <img :src="'src/assets/images/login.png'" alt="login" @click="showLoginInfo" />
+        <img :src="'src/assets/images/login.png'" alt="login" @click="showLoginInfo" class="img"/>
       </div>
     </div>
     <div v-if="isLoginInfoVisible" class="overlay" @click.self="hideLoginInfo">
@@ -88,7 +90,7 @@ header {
   color: #333;
 }
 
-img {
+.img{
   width: 30px;
   height: 30px;
 }

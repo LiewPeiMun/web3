@@ -10,7 +10,7 @@
         :key="index"
         class="w-full flex-shrink-0"
       >
-        <img :src="slide" class="w-full h-auto object-cover" alt="" />
+        <img :src="slide" class="w-full h-auto object-cover" alt="image" />
       </div>
     </div>
 
@@ -45,9 +45,9 @@ import { ref, onMounted, onUnmounted } from 'vue';
 
 // Define the slides
 const slides = ref([
-  'src/assets/images/slider.png',
-  'src/assets/images/slider.png',
-  'src/assets/images/slider.png',
+  'src/assets/images/slider1.png',
+  'src/assets/images/slider2.png',
+  'src/assets/images/slider3.png',
 ]);
 
 // Track the current slide index
