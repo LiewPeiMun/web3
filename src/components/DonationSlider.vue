@@ -7,20 +7,20 @@
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <div
-          v-for="(card, index) in donationCards"
-          :key="index"
+          v-for="card in donationCards"
+          :key="card.eventId"
           class="bg-white rounded-lg shadow-md overflow-hidden"
         >
           <img :src="card.imageSrc" :alt="card.title" class="w-full" />
           <div class="p-4">
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-xl font-medium text-gray-800">{{ card.title }}</h3>
-              <span class="text-sm font-medium text-gray-600">{{ card.progress }}%</span>
+              <span class="text-sm font-medium text-gray-600">{{ getProgress(card) }}%</span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
               <div
                 class="bg-purple-600 rounded-full h-2.5"
-                :style="{ width: `${card.progress}%` }"
+                :style="{ width: `${getProgress(card)}%` }"
               ></div>
             </div>
             <div class="flex items-center justify-between">
@@ -29,7 +29,7 @@
             </div>
             <div class="mt-4 flex justify-center">
               <button
-                @click="openModal"
+                @click="() => openModal(card)"
                 class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
                 Donate
@@ -41,11 +41,28 @@
     </div>
 
     <!-- Modal -->
-    <div v-if="isModalVisible" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+    <div
+      v-if="isModalVisible"
+      class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center"
+    >
       <div class="bg-transparent p-6 rounded-lg shadow-lg w-full max-w-lg relative">
-        <button @click="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-800">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        <button
+          @click="closeModal"
+          class="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
           </svg>
         </button>
         <section class="form-container">
@@ -58,17 +75,17 @@
               class="input"
               aria-label="Select donation event"
             >
-              <option v-for="event in events" :key="event.id" :value="event.id">
-                {{ event.name }}
+              <option v-for="event in events" :key="event.eventId" :value="event.eventId">
+                {{ event.title }}
               </option>
             </select>
-            
+
             <label for="amount" class="label">Amount (RM)</label>
             <div class="input-group">
               <input
                 type="text"
                 id="amount"
-                v-model="amount"
+                v-model="amounts[selectedEventId]"
                 class="input"
                 aria-label="Enter amount in RM"
               />
@@ -81,88 +98,77 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useEventsStore } from '@/stores/useEventStore'
 import axios from 'axios'
 
-export default defineComponent({
-  name: 'DonationSlider',
-  setup() {
-    const isModalVisible = ref(false)
-    const donationCards = ref([
-      {
-        imageSrc:
-          'https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
-        title: 'Education',
-        progress: 82,
-        amount: '$8,848',
-        goal: '$10,000'
-      },
-      {
-        imageSrc:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRupKldbh5Dg6ksfTILPeU1Tk71zVudk_BXnw&s',
-        title: 'Education',
-        progress: 70,
-        amount: '$8,000',
-        goal: '$10,000'
-      },
-      {
-        imageSrc:
-          'https://static.vecteezy.com/system/resources/thumbnails/025/880/646/small/luminous-connectivity-abstract-screen-notebook-computer-mockup-in-dark-background-ai-generative-technology-photo.jpg',
-        title: 'Education',
-        progress: 10,
-        amount: '$1,000',
-        goal: '$10,000'
-      }
-    ])
+// Access the event store
+const eventStore = useEventsStore()
 
-    const form = ref({
-      amount: '',
-      selectedEventId: ''
-    })
-    const amount = ref('')
-    const selectedEventId = ref('')
-    const events = ref<{ id: string; name: string }[]>([])
+// Reactive state
+const isModalVisible = ref(false)
+const selectedEventId = ref('')
+const events = computed(() => eventStore.events)
+const amounts = ref<{ [key: string]: string }>({})
 
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.get('http://subnetapi.runasp.net/Event/GetEvents')
-        events.value = response.data // Adjust if the response structure is different
-      } catch (error) {
-        console.error('Error fetching events:', error)
-      }
-    }
+// Fetch events on component mount
+onMounted(async () => {
+  await eventStore.fetchEvents()
+})
 
-    onMounted(() => {
-      fetchEvents()
-    })
+// Computed property for donation cards
+const donationCards = computed(() => eventStore.events)
 
-    const openModal = () => {
-      isModalVisible.value = true
-    }
+// Method to calculate progress
+const getProgress = computed(() => (card: { amount: number; goal: number }) => {
+  return Math.min((card.amount / card.goal) * 100, 100).toFixed(2)
+})
+// Modal control methods
+const openModal = (card: { eventId: number; title: string }) => {
+  selectedEventId.value = card.eventId.toString()
+  if (!amounts.value[selectedEventId.value]) {
+    amounts.value[selectedEventId.value] = ''
+  }
+  isModalVisible.value = true
+}
 
-    const closeModal = () => {
-      isModalVisible.value = false
-    }
+const closeModal = () => {
+  isModalVisible.value = false
+}
 
-    const handleSubmit = () => {
-      console.log('Form submitted with amount:', amount.value)
-      console.log('Selected donation event ID:', selectedEventId.value)
+// Form submission handler
+const handleSubmit = async () => {
+  const requestData = {
+    UserId: sessionStorage.getItem('userID'), // Convert UserId to number
+    EventId: Number(selectedEventId.value), // Convert EventId to number
+    Amount: parseFloat(amounts.value[selectedEventId.value]) // Convert Amount to number
+  }
+
+  try {
+    const response = await axios.post(
+      'http://subnetapi.runasp.net/Donate/MemberDonation',
+      requestData
+    )
+
+    if (response.data.status === 1) {
+      console.log('Form submitted successfully')
       closeModal()
+    } else {
+      console.error('Submission failed:', response.data.message)
     }
-
-    return {
-      isModalVisible,
-      donationCards,
-      amount,
-      selectedEventId,
-      events,
-      openModal,
-      closeModal,
-      handleSubmit
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.error('Error submitting form:', {
+        message: error.message,
+        status: error.response.status,
+        data: error.response.data
+      })
+    } else {
+      console.error('Unexpected error:', error)
     }
   }
-})
+}
 </script>
 
 <style scoped>

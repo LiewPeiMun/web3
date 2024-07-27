@@ -9,8 +9,9 @@
         class="input"
         aria-label="Select donation event"
       >
-        <option v-for="event in events" :key="event.id" :value="event.id">
-          {{ event.name }}
+        <option value="" disabled>Select an event</option>
+        <option v-for="event in events" :key="event.eventId" :value="event.eventId">
+          {{ event.title }}
         </option>
       </select>
       
@@ -29,44 +30,53 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+<script lang="ts" setup>
+import { ref, onMounted, computed } from 'vue';
+import { useEventsStore } from '@/stores/useEventStore'
 import axios from 'axios';
 
-export default defineComponent({
-  name: 'TransactionForm',
-  setup() {
-    const amount = ref('');
-    const selectedEventId = ref('');
-    const events = ref<{ id: string; name: string }[]>([]);
+// Access the event store
+const eventStore = useEventsStore()
+const events = computed(() => eventStore.events)
+const amount = ref('');
+const selectedEventId = ref<string | null>(null);
 
-    // Fetch donation events from API
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.get('http://subnetapi.runasp.net/Event/GetEvents');
-        events.value = response.data; // Adjust if the response structure is different
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
 
-    onMounted(() => {
-      fetchEvents();
-    });
 
-    const handleSubmit = () => {
-      console.log('Form submitted with amount:', amount.value);
-      console.log('Selected donation event ID:', selectedEventId.value);
-    };
-
-    return {
-      amount,
-      selectedEventId,
-      events,
-      handleSubmit,
-    };
-  },
+onMounted(() => {
+  eventStore.fetchEvents();
 });
+
+const handleSubmit = async () => {
+  const requestData = {
+    UserId: sessionStorage.getItem('userID'), // Convert UserId to number
+    EventId: Number(selectedEventId.value), // Convert EventId to number
+    Amount: parseFloat(amount.value) // Convert Amount to number
+  }
+
+  try {
+    const response = await axios.post(
+      'http://subnetapi.runasp.net/Donate/MemberDonation',
+      requestData
+    )
+
+    if (response.data.status === 1) {
+      console.log('Form submitted successfully')
+    } else {
+      console.error('Submission failed:', response.data.message)
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.error('Error submitting form:', {
+        message: error.message,
+        status: error.response.status,
+        data: error.response.data
+      })
+    } else {
+      console.error('Unexpected error:', error)
+    }
+  }
+};
 </script>
 
 <style scoped>

@@ -6,11 +6,7 @@ import {
 
 // Importing RouteLocationRaw as a type
 import type { RouteLocationRaw, NavigationFailure, RouteRecordRaw } from "vue-router"
-
-import About from "@/views/AboutView.vue"
 import Landing from "@/views/LandingView.vue"
-import CatView from "@/views/CatView.vue"
-
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -18,22 +14,6 @@ const routes: Array<RouteRecordRaw> = [
     name: "landing",
     meta: { title: "Landing" },
   },
-  {
-    path: "/about",
-    component: () => About,
-    name: "about",
-    meta: { title: "About" },
-  },
-  {
-    path: "/cat",
-    component: () => CatView,
-    name: "cat",
-    meta: { title: "Cat" },
-  },//
- 
- 
-
-
 ]
 
 const router = createRouter({

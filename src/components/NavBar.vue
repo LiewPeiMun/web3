@@ -2,7 +2,7 @@
   <header>
     <div class="header-content">
       <a href="/" class="logo">
-        <img :src="'src/assets/images/logo.png'" alt="EDUCHAINAID Logo"/>
+        <img :src="'src/assets/images/logo.png'" alt="EDUCHAINAID Logo" />
       </a>
       <div class="hamburger-menu" @click="toggleNav">
         <span></span>
@@ -20,7 +20,7 @@
       </nav>
       <div class="justify-right">
         <button class="donate-button" @click="showTransactionForm">Donate Now</button>
-        <img :src="'src/assets/images/login.png'" alt="login" @click="showLoginInfo" class="img"/>
+        <img :src="'src/assets/images/login.png'" alt="login" @click="showLoginInfo" class="img" />
       </div>
     </div>
     <div v-if="isLoginInfoVisible" class="overlay" @click.self="hideLoginInfo">
@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Logininfo from './Logininfo.vue';
+import Logininfo from '@/components/LoginInfo.vue';
 import TransactionForm from './TransactionForm.vue';
 import ApplicationForm from './ApplicationForm.vue';
 
