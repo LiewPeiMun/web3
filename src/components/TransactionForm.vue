@@ -14,7 +14,7 @@
           {{ event.title }}
         </option>
       </select>
-      
+
       <label for="amount" class="label">Amount (RM)</label>
       <div class="input-group">
         <input
@@ -31,21 +31,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed } from 'vue'
 import { useEventsStore } from '@/stores/useEventStore'
-import axios from 'axios';
+import axios from 'axios'
 
 // Access the event store
 const eventStore = useEventsStore()
 const events = computed(() => eventStore.events)
-const amount = ref('');
-const selectedEventId = ref<string | null>(null);
-
-
+const amount = ref('')
+const selectedEventId = ref<string | null>(null)
 
 onMounted(() => {
-  eventStore.fetchEvents();
-});
+  eventStore.fetchEvents()
+})
 
 const handleSubmit = async () => {
   const requestData = {
@@ -61,7 +59,7 @@ const handleSubmit = async () => {
     )
 
     if (response.data.status === 1) {
-      console.log('Form submitted successfully')
+      location.reload()
     } else {
       console.error('Submission failed:', response.data.message)
     }
@@ -76,7 +74,7 @@ const handleSubmit = async () => {
       console.error('Unexpected error:', error)
     }
   }
-};
+}
 </script>
 
 <style scoped>

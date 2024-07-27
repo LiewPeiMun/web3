@@ -13,14 +13,14 @@
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/about">About</a></li>
-          <li><a href="/causes">Events</a></li>
+          <li><a href="/event">Events</a></li>
           <li><a @click="showApplicationForm">Application</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
       </nav>
       <div class="justify-right">
         <button class="donate-button" @click="showTransactionForm">Donate Now</button>
-        <img :src="'src/assets/images/login.png'" alt="login" @click="showLoginInfo" class="img" />
+        <img :src="loginImageSrc" alt="login" @click="showLoginInfo" class="img" />
       </div>
     </div>
     <div v-if="isLoginInfoVisible" class="overlay" @click.self="hideLoginInfo">
@@ -35,54 +35,57 @@
   </header>
 </template>
 
-
 <script setup lang="ts">
-import { ref } from 'vue';
-import Logininfo from '@/components/LoginInfo.vue';
-import TransactionForm from './TransactionForm.vue';
-import ApplicationForm from './ApplicationForm.vue';
+import { computed, onMounted, ref } from 'vue'
+import Logininfo from '@/components/Logininfo.vue'
+import TransactionForm from './TransactionForm.vue'
+import ApplicationForm from './ApplicationForm.vue'
 
+const userID = ref('')
 
-const isNavVisible = ref(false);
-const isLoginInfoVisible = ref(false);
-const isTransactionFormVisible = ref(false);
-const isApplicationFormVisible = ref(false);
-
+onMounted(() => {
+  userID.value = sessionStorage.getItem('userID') || ''
+  console.log('userID', userID.value)
+})
+const isNavVisible = ref(false)
+const isLoginInfoVisible = ref(false)
+const isTransactionFormVisible = ref(false)
+const isApplicationFormVisible = ref(false)
 
 const toggleNav = () => {
-  isNavVisible.value = !isNavVisible.value;
-};
-
+  isNavVisible.value = !isNavVisible.value
+}
 
 const showLoginInfo = () => {
-  isLoginInfoVisible.value = true;
-};
-
+  if (!userID.value) {
+    isLoginInfoVisible.value = true
+  }
+}
 
 const hideLoginInfo = () => {
-  isLoginInfoVisible.value = false;
-};
-
+  isLoginInfoVisible.value = false
+}
 
 const showTransactionForm = () => {
-  isTransactionFormVisible.value = true;
-};
-
+  isTransactionFormVisible.value = true
+}
 
 const hideTransactionForm = () => {
-  isTransactionFormVisible.value = false;
-};
+  isTransactionFormVisible.value = false
+}
 
 const showApplicationForm = () => {
-   isApplicationFormVisible.value = true;
-};
-
+  isApplicationFormVisible.value = true
+}
 
 const hideApplicationForm = () => {
-  isApplicationFormVisible.value = false;
-};
-</script>
+  isApplicationFormVisible.value = false
+}
 
+const loginImageSrc = computed(() => {
+  return userID.value ? 'src/assets/images/profile.png' : 'src/assets/images/login.png'
+})
+</script>
 
 <style lang="scss" scoped>
 header {
@@ -92,7 +95,6 @@ header {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-
 .header-content {
   display: flex;
   justify-content: space-between;
@@ -100,13 +102,11 @@ header {
   width: 100%;
 }
 
-
 .justify-right {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
 
 .logo {
   font-size: 24px;
@@ -115,27 +115,22 @@ header {
   color: #333;
 }
 
-
-.img{
+.img {
   width: 30px;
   height: 30px;
 }
-
 
 .justify-right {
   justify-content: flex-end !important;
 }
 
-
 nav {
   display: none;
 }
 
-
 nav.show-nav {
   display: block;
 }
-
 
 nav ul {
   list-style: none;
@@ -154,17 +149,14 @@ nav ul {
   z-index: 1000;
 }
 
-
 nav.show-nav ul {
   transform: translateY(0);
 }
-
 
 nav li {
   margin: 10px 0;
   text-align: center;
 }
-
 
 nav a {
   text-decoration: none;
@@ -173,7 +165,6 @@ nav a {
   padding: 10px 20px;
   display: block;
 }
-
 
 .donate-button {
   background-color: #007bff;
@@ -185,11 +176,9 @@ nav a {
   transition: background-color 0.3s ease;
 }
 
-
 .donate-button:hover {
   background-color: #0056b3;
 }
-
 
 .hamburger-menu {
   display: none;
@@ -198,7 +187,6 @@ nav a {
   justify-content: space-between;
   align-items: center;
 }
-
 
 .hamburger-menu span {
   display: block;
@@ -211,21 +199,17 @@ nav a {
     opacity 0.3s ease;
 }
 
-
 .hamburger-menu.active span:nth-child(1) {
   transform: rotate(45deg) translate(5px, 5px);
 }
-
 
 .hamburger-menu.active span:nth-child(2) {
   opacity: 0;
 }
 
-
 .hamburger-menu.active span:nth-child(3) {
   transform: rotate(-45deg) translate(5px, -5px);
 }
-
 
 .overlay {
   position: fixed;
@@ -240,9 +224,6 @@ nav a {
   z-index: 1000;
 }
 
-
-
-
 @media (max-width: 890px) {
   .header-content {
     display: flex;
@@ -250,11 +231,9 @@ nav a {
     align-items: center;
   }
 
-
   .hamburger-menu {
     display: flex;
   }
-
 
   nav ul {
     flex-direction: column;
@@ -269,17 +248,14 @@ nav a {
     z-index: 1000;
   }
 
-
   nav.show-nav ul {
     transform: translateY(0);
   }
-
 
   .donate-button {
     display: none;
   }
 }
-
 
 @media (min-width: 891px) {
   .header-content {
@@ -288,11 +264,9 @@ nav a {
     align-items: center;
   }
 
-
   nav {
     display: block;
   }
-
 
   nav ul {
     flex-direction: row;
@@ -303,22 +277,16 @@ nav a {
     transition: none;
   }
 
-
   nav li {
     margin: 0 10px;
   }
 
-
   .hamburger-menu {
     display: none;
   }
-
 
   .donate-button {
     display: inline-block;
   }
 }
 </style>
-
-
-

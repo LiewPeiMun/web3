@@ -276,6 +276,7 @@ const submitForm = async () => {
     console.log(response.data)
     if (response.data) {
       isPopupVisible.value = false
+      location.reload()
     }
   } catch (error) {
     console.error('Error submitting form:', error)

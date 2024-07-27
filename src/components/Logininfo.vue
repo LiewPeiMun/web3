@@ -22,6 +22,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/useAuthStore'
+import router from '@/router'
 
 const authStore = useAuthStore()
 const email = ref<string>('')
@@ -31,6 +32,7 @@ const showPopup = ref<boolean>(false)
 const handleLogin = async () => {
   await authStore.login(email.value)
   showPopup.value = true
+  location.reload()
 }
 </script>
 

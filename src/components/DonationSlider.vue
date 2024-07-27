@@ -152,8 +152,7 @@ const handleSubmit = async () => {
     )
 
     if (response.data.status === 1) {
-      console.log('Form submitted successfully')
-      closeModal()
+      location.reload()
     } else {
       console.error('Submission failed:', response.data.message)
     }
