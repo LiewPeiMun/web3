@@ -104,17 +104,6 @@
                   </div>
                 </div>
               </div>
-              <h3 class="mt-8 text-center text-2xl max-md:mt-6 max-md:text-xl">
-                Section 4: Supporting Documents
-              </h3>
-              <div class="w-full mt-6">
-                <label for="studentIdUpload" class="block">Upload a copy of your student ID:</label>
-                <input type="file" id="studentIdUpload" class="mt-2 w-full p-3 text-black bg-zinc-300" accept="image/*,application/pdf" required />
-              </div>
-              <div class="w-full mt-6">
-                <label for="additionalDocs" class="block">Upload any additional documents that support your application (e.g., recommendation letters, proof of financial need):</label>
-                <input type="file" id="additionalDocs" class="mt-2 w-full p-3 text-black bg-zinc-300" accept="image/*,application/pdf" multiple />
-              </div>
               <button type="submit" class="px-6 py-3 mt-8 text-xl text-center uppercase bg-green-500 text-white rounded max-md:mt-5">
                 Submit
               </button>
