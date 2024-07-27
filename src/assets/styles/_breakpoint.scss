@@ -1,0 +1,56 @@
+// @function lower-bound($range) {
+//     @return nth($range, 1);
+//   }
+  
+//   @function upper-bound($range) {
+//     @return nth($range, 2);
+//   }
+  
+//   $xsmall-range: (0, 415px);
+//   $small-range: (416px, 768px);
+//   $medium-range: (769px, 1024px);
+//   $large-range: (1025px, 1920px);
+//   $screen: "only screen";
+//   $landscape: "#{$screen} and (orientation: landscape)";
+//   $portrait: "#{$screen} and (orientation:portrait)";
+//   $small-only: "#{$screen} and (min-width:#{lower-bound($xsmall-range)}) and (max-width:#{upper-bound($small-range) })"; // only mobile
+  
+//   $small-up: "#{$screen} and (min-width:#{upper-bound($small-range)}) "; // more than mobile
+  
+//   $medium-only: "#{$screen} and (min-width:#{lower-bound($medium-range)}) and (max-width:#{upper-bound($medium-range)}) "; // only for tablet;
+  
+//   $medium-up: "#{$screen} and (min-width:#{upper-bound($medium-range)}) "; // more than tablet
+  
+//   $large-only: "#{$screen} and (min-width:#{lower-bound($large-range)})  "; // only for pc
+  
+//   $xlarge-up: "#{$screen} and (min-width:#{upper-bound($large-range)}) "; // more for pc, for big big screen. do it later if needs
+  
+//   $breakpoints: (
+//     "landscape": $landscape,
+//     "portrait": $portrait,
+//     "small-only": $small-only,
+//     "small-up": $small-up,
+//     "medium-only": $medium-only,
+//     "medium-up": $medium-up,
+//     "large-only": $large-only,
+//     "xlarge-up": $xlarge-up,
+//     "mobile": $small-only,
+//     "mobile-up": $small-up,
+//     "tablet": $medium-only,
+//     "tablet-up": $medium-up,
+//     "pc": $large-only,
+//     "big-screen": $xlarge-up,
+//   );
+  
+//   // um for using media query
+//   @mixin um($media) {
+//     @if map-has-key($breakpoints, $media) {
+//       @media #{map-get($breakpoints, $media)} {
+//         @content;
+//       }
+//     } @else {
+//       @media #{$media} {
+//         @content;
+//       }
+//     }
+//   }
