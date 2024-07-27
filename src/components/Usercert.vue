@@ -66,8 +66,20 @@ export default defineComponent({
       amount: '150'  // Set amount here
     });
     // Function to download the PDF
+// Function to download the PDF
     const downloadPDF = () => {
-      const element = document.querySelector('main') as HTMLElement;
+      // Create a div element and populate it with the form data text
+      const content = `
+        <div>
+          User ID: ${formData.value.userId}<br>
+          Event ID: ${formData.value.eventId}<br>
+          Event Name: ${formData.value.eventName}<br>
+          Amount: ${formData.value.amount}
+        </div>
+      `;
+      const element = document.createElement('div');
+      element.innerHTML = content;
+
       const options = {
         margin: 1,
         filename: 'edu-chain-aid.pdf',
@@ -75,9 +87,11 @@ export default defineComponent({
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
       };
+
+      // Convert the dynamically created div to PDF
       html2pdf().from(element).set(options).save();
     };
-
+    
     return {
       formData,
       downloadPDF
