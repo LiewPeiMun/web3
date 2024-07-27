@@ -40,10 +40,10 @@
         </div>
       </form>
       <div class="flex gap-5 justify-between self-end mt-10 mr-6 text-base font-medium leading-6 text-white whitespace-nowrap max-md:mt-10 max-md:mr-2.5">
-        <button class="px-4 py-3.5 rounded-lg bg-zinc-500 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5">
+        <button id="cancelButton" class="px-4 py-3.5 rounded-lg bg-zinc-500 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5">
           Cancel
         </button>
-        <button @click="downloadPDF" class="px-4 py-3.5 rounded-lg bg-green-500 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5">
+        <button id="downloadButton" @click="downloadPDF" class="px-4 py-3.5 rounded-lg bg-green-500 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5">
           Download
         </button>
       </div>
@@ -54,7 +54,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 // @ts-ignore
- import html2pdf from'html2pdf.js';
+import html2pdf from 'html2pdf.js';
 
 export default defineComponent({
   name: 'EduChainAid',
@@ -65,33 +65,47 @@ export default defineComponent({
       eventName: 'Annual Gala',
       amount: '150'  // Set amount here
     });
+
     // Function to download the PDF
-// Function to download the PDF
     const downloadPDF = () => {
-      // Create a div element and populate it with the form data text
-      const content = `
-        <div>
-          User ID: ${formData.value.userId}<br>
-          Event ID: ${formData.value.eventId}<br>
-          Event Name: ${formData.value.eventName}<br>
-          Amount: ${formData.value.amount}
-        </div>
-      `;
-      const element = document.createElement('div');
-      element.innerHTML = content;
+  // Hide the button
+  const downloadButton = document.querySelector('#downloadButton') as HTMLElement;
+  const cancelButton = document.querySelector('#cancelButton') as HTMLElement;
+  if (downloadButton) downloadButton.style.display = 'none';
+  if (cancelButton) cancelButton.style.display = 'none';
 
-      const options = {
-        margin: 1,
-        filename: 'edu-chain-aid.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
+  // Move the form to the right
+  const content = document.querySelector('main') as HTMLElement;
+  if (content) {
+    // Add a class or inline styles to shift the content
+    content.style.position = 'relative';
+    content.style.left = '15px'; // Adjust this value as needed
+    content.style.transform = 'translateX(50px)'; // Optional: for smoother movement
+    content.style.margin = '0';
+     }
 
-      // Convert the dynamically created div to PDF
-      html2pdf().from(element).set(options).save();
-    };
-    
+  const options = {
+    margin: 1,
+    filename: 'edu-chain-aid.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+
+  html2pdf().from(content).set(options).save().then(() => {
+    // Reset the styles after the PDF is generated
+    if (content) {
+      content.style.position = '';
+      content.style.left = '';
+      content.style.transform = '';
+    }
+
+    // Show the button again after the PDF is generated
+    if (downloadButton) downloadButton.style.display = 'block';
+    if (cancelButton) cancelButton.style.display = 'block';
+  });
+};
+
     return {
       formData,
       downloadPDF
@@ -101,5 +115,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Add any scoped styles if necessary */
+
+
+
+
 </style>
