@@ -1,19 +1,20 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import type { ICatState } from '@/types/cat';
+import type { ICatState, ICatItem } from '@/types/cat';
 
 export const useCatStore = defineStore('api', {
   state: (): ICatState => ({
-    apiData: {},
+    apiData: [],
     loading: false,
-    error: null
+    error: null,
   }),
   actions: {
-    async fetchData(statusCode: string) {
+    async fetchData() {
       this.loading = true;
       try {
-        const response = await axios.get(`https://http.cat/${statusCode}`);
+        const response = await axios.get<ICatItem[]>('/api/Item/GetItems');
         this.apiData = response.data;
+        console.log("this.apiData", response.data);
       } catch (error) {
         this.error = error;
       } finally {

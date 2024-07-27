@@ -8,15 +8,15 @@ import {
 import type { RouteLocationRaw, NavigationFailure, RouteRecordRaw } from "vue-router"
 
 import About from "@/views/AboutView.vue"
-import Home from "@/views/HomeView.vue"
+import Landing from "@/views/LandingView.vue"
 import CatView from "@/views/CatView.vue"
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    component: () => Home,
-    name: "home",
-    meta: { title: "Home" },
+    component: () => Landing,
+    name: "landing",
+    meta: { title: "Landing" },
   },
   {
     path: "/about",

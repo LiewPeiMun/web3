@@ -1,5 +1,12 @@
-export interface ICatState{
-    apiData: object,
-    loading: boolean,
-    error: unknown,
-}
+export interface ICatItem {
+    id: number;
+    name: string;
+    status: number;
+  }
+  
+  export interface ICatState {
+    apiData: ICatItem[];
+    loading: boolean;
+    error: unknown;
+  }
+  
