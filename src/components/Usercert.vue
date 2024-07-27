@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col items-center px-9 pt-8 pb-20 bg-zinc-300 max-w-[534px] max-md:px-5">
+  <main ref="content" class="flex flex-col items-center px-9 pt-8 pb-20 bg-zinc-300 max-w-[534px] max-md:px-5">
     <header>
       <h1 class="text-xl font-bold uppercase text-zinc-500">EduChainAid</h1>
       <p class="mt-2 text-xs font-medium tracking-widest text-black uppercase">
@@ -43,7 +43,7 @@
         <button class="px-4 py-3.5 rounded-lg bg-zinc-500 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5">
           Cancel
         </button>
-        <button class="px-4 py-3.5 rounded-lg bg-green-500 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5">
+        <button @click="downloadPDF" class="px-4 py-3.5 rounded-lg bg-green-500 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5">
           Download
         </button>
       </div>
@@ -53,20 +53,34 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+// @ts-ignore
+ import html2pdf from'html2pdf.js';
 
 export default defineComponent({
   name: 'EduChainAid',
   setup() {
-    // Static user info for demonstration purposes
     const formData = ref({
       userId: '123456',
       eventId: 'EVT7890',
       eventName: 'Annual Gala',
       amount: '150'  // Set amount here
     });
+    // Function to download the PDF
+    const downloadPDF = () => {
+      const element = document.querySelector('main') as HTMLElement;
+      const options = {
+        margin: 1,
+        filename: 'edu-chain-aid.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().from(element).set(options).save();
+    };
 
     return {
       formData,
+      downloadPDF
     };
   },
 });
