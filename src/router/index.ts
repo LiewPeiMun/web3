@@ -11,6 +11,7 @@ import About from "@/views/AboutView.vue"
 import Landing from "@/views/LandingView.vue"
 import CatView from "@/views/CatView.vue"
 
+import Loginpage from "@/views/Loginpage.vue"
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
@@ -29,7 +30,16 @@ const routes: Array<RouteRecordRaw> = [
     component: () => CatView,
     name: "cat",
     meta: { title: "Cat" },
+  },//
+ 
+  {
+    path: "/login",
+    component: () =>  Loginpage,
+    name: "LOGIN",
+    meta: { title: "Loginpage" },
   },
+ 
+
 ]
 
 const router = createRouter({
