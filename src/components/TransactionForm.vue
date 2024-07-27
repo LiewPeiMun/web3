@@ -2,6 +2,18 @@
   <section class="form-container">
     <h1 class="title">Transaction</h1>
     <form @submit.prevent="handleSubmit" class="form">
+      <label for="event-id" class="label">Donation Event</label>
+      <select
+        id="event-id"
+        v-model="selectedEventId"
+        class="input"
+        aria-label="Select donation event"
+      >
+        <option v-for="event in events" :key="event.id" :value="event.id">
+          {{ event.name }}
+        </option>
+      </select>
+      
       <label for="amount" class="label">Amount (RM)</label>
       <div class="input-group">
         <input
@@ -18,19 +30,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
+import axios from 'axios';
 
 export default defineComponent({
   name: 'TransactionForm',
   setup() {
     const amount = ref('');
+    const selectedEventId = ref('');
+    const events = ref<{ id: string; name: string }[]>([]);
+
+    // Fetch donation events from API
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get('http://subnetapi.runasp.net/Event/GetEvents');
+        events.value = response.data; // Adjust if the response structure is different
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    onMounted(() => {
+      fetchEvents();
+    });
 
     const handleSubmit = () => {
       console.log('Form submitted with amount:', amount.value);
+      console.log('Selected donation event ID:', selectedEventId.value);
     };
 
     return {
       amount,
+      selectedEventId,
+      events,
       handleSubmit,
     };
   },
@@ -45,6 +77,7 @@ export default defineComponent({
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 400px;
   max-width: 100%;
+  position: relative;
 }
 
 .title {
