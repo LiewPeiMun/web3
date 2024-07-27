@@ -1,15 +1,15 @@
 <template>
   <section class="form-container">
-    <h1 class="title">Login</h1>
-    <form @submit.prevent="handleLogin" class="form">
-      <label for="email" class="label">Email address</label>
+    <h1 class="title">Transaction</h1>
+    <form @submit.prevent="handleSubmit" class="form">
+      <label for="amount" class="label">Amount (RM)</label>
       <div class="input-group">
         <input
-          type="email"
-          id="email"
-          v-model="email"
+          type="text"
+          id="amount"
+          v-model="amount"
           class="input"
-          aria-label="Enter your email address"
+          aria-label="Enter amount in RM"
         />
         <button type="submit" class="submit-button">Submit</button>
       </div>
@@ -21,17 +21,17 @@
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-  name: 'Logininfo',
+  name: 'TransactionForm',
   setup() {
-    const email = ref('');
+    const amount = ref('');
 
-    const handleLogin = () => {
-      console.log('Login submitted with email:', email.value);
+    const handleSubmit = () => {
+      console.log('Form submitted with amount:', amount.value);
     };
 
     return {
-      email,
-      handleLogin,
+      amount,
+      handleSubmit,
     };
   },
 });

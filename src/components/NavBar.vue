@@ -17,20 +17,47 @@
         </ul>
       </nav>
       <div class="justify-right">
-      <button class="donate-button">Donate Now</button>
-      <img :src="'src/assets/images/login.png'" alt="login" />
+        <button class="donate-button" @click="showTransactionForm">Donate Now</button>
+        <img :src="'src/assets/images/login.png'" alt="login" @click="showLoginInfo" />
       </div>
+    </div>
+    <div v-if="isLoginInfoVisible" class="overlay" @click.self="hideLoginInfo">
+      <Logininfo @close="hideLoginInfo" />
+    </div>
+    <div v-if="isTransactionFormVisible" class="overlay" @click.self="hideTransactionForm">
+      <TransactionForm @close="hideTransactionForm" />
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-const isNavVisible = ref(false)
+import { ref } from 'vue';
+import Logininfo from './Logininfo.vue';
+import TransactionForm from './TransactionForm.vue';
+
+const isNavVisible = ref(false);
+const isLoginInfoVisible = ref(false);
+const isTransactionFormVisible = ref(false);
 
 const toggleNav = () => {
-  isNavVisible.value = !isNavVisible.value
-}
+  isNavVisible.value = !isNavVisible.value;
+};
+
+const showLoginInfo = () => {
+  isLoginInfoVisible.value = true;
+};
+
+const hideLoginInfo = () => {
+  isLoginInfoVisible.value = false;
+};
+
+const showTransactionForm = () => {
+  isTransactionFormVisible.value = true;
+};
+
+const hideTransactionForm = () => {
+  isTransactionFormVisible.value = false;
+};
 </script>
 
 <style lang="scss" scoped>
@@ -50,8 +77,8 @@ header {
 
 .justify-right {
   display: flex;
-  align-items: center; /* Align items vertically center */
-  gap: 10px; /* Optional: Add some space between button and icon */
+  align-items: center;
+  gap: 10px;
 }
 
 .logo {
@@ -61,13 +88,13 @@ header {
   color: #333;
 }
 
-img{
+img {
   width: 30px;
-  height: 30px
+  height: 30px;
 }
 
-.justify-right{
-  justify-content: flex-end !important; 
+.justify-right {
+  justify-content: flex-end !important;
 }
 
 nav {
@@ -156,6 +183,20 @@ nav a {
 .hamburger-menu.active span:nth-child(3) {
   transform: rotate(-45deg) translate(5px, -5px);
 }
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
 
 @media (max-width: 890px) {
   .header-content {

@@ -1,6 +1,6 @@
 <template>
     <Logininfo />
-    <Transaction />
+    <TransactionForm />
     <transactionsuccess />
     <loginsuccess />
     <Usercert />
@@ -10,7 +10,7 @@
   import Logininfo from '@/components/Logininfo.vue';
   import Loginsuccess from '@/components/Loginsuccess.vue';
   import Transactionsuccess from '@/components/Transactionsuccess.vue';
-  import Transaction from '@/components/Transaction.vue';
+  import TransactionForm from '@/components/TransactionForm.vue';
   import Usercert from '@/components/Usercert.vue';
   </script>
   
