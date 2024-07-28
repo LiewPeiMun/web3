@@ -40,6 +40,7 @@ import { computed, onMounted, ref } from 'vue'
 import Logininfo from '@/components/Logininfo.vue'
 import TransactionForm from './TransactionForm.vue'
 import ApplicationForm from './ApplicationForm.vue'
+import router from '@/router';
 
 const userID = ref('')
 
@@ -59,6 +60,8 @@ const toggleNav = () => {
 const showLoginInfo = () => {
   if (!userID.value) {
     isLoginInfoVisible.value = true
+  }else{
+    router.push({name: "profile"})
   }
 }
 

@@ -7,12 +7,26 @@ import {
 // Importing RouteLocationRaw as a type
 import type { RouteLocationRaw, NavigationFailure, RouteRecordRaw } from "vue-router"
 import Landing from "@/views/LandingView.vue"
+import CertificationView from "@/views/CertificationView.vue"
+import MyProfile from "@/views/MyProfile.vue"
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     component: () => Landing,
     name: "landing",
     meta: { title: "Landing" },
+  },
+  {
+    path: "/certification",
+    component: () => CertificationView,
+    name: "certification",
+    meta: { title: "Certification" },
+  },
+  {
+    path: "/Profile",
+    component: () => MyProfile,
+    name: "profile",
+    meta: { title: "MyProfile" },
   },
 ]
 

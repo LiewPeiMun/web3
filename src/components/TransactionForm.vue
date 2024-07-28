@@ -33,9 +33,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue'
 import { useEventsStore } from '@/stores/useEventStore'
-import axios from 'axios'
 
-// Access the event store
 const eventStore = useEventsStore()
 const events = computed(() => eventStore.events)
 const amount = ref('')
@@ -47,32 +45,28 @@ onMounted(() => {
 
 const handleSubmit = async () => {
   const requestData = {
-    UserId: sessionStorage.getItem('userID'), // Convert UserId to number
-    EventId: Number(selectedEventId.value), // Convert EventId to number
-    Amount: parseFloat(amount.value) // Convert Amount to number
+    UserId: sessionStorage.getItem('userID'),
+    EventId: Number(selectedEventId.value),
+    Amount: parseFloat(amount.value)
   }
 
   try {
-    const response = await axios.post(
-      'http://subnetapi.runasp.net/Donate/MemberDonation',
-      requestData
-    )
+    const response = await eventStore.submitTransaction(requestData)
 
-    if (response.data.status === 1) {
-      location.reload()
+    if (response?.status === 1) {
+      console.log('Response:', response)
+      console.log('Initial Amount:', response.donatedAmount.initialAmount)
+      console.log('Deduction:', response.donatedAmount.deduction)
+      console.log('Final Amount:', response.donatedAmount.finalAmount)
+      console.log('Event Title:', response.event.title)
+
+      // Redirect to the certification page
+      location.href = '#/certification'
     } else {
-      console.error('Submission failed:', response.data.message)
+      console.error('Submission failed:', response.message)
     }
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      console.error('Error submitting form:', {
-        message: error.message,
-        status: error.response.status,
-        data: error.response.data
-      })
-    } else {
-      console.error('Unexpected error:', error)
-    }
+    console.error('Error submitting form:', error)
   }
 }
 </script>
